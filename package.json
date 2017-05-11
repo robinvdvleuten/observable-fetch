@@ -1,0 +1,21 @@
+{
+  "name": "observable-fetch",
+  "version": "0.0.0",
+  "description": "RxJS Observable wrapped around the WHATWG Fetch API.",
+  "license": "MIT",
+  "author": "Robin van der Vleuten <robin@webstronauts.co>",
+  "scripts": {
+    "test": "jest --env=jsdom"
+  },
+  "devDependencies": {
+    "babel-jest": "^20.0.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "jest": "^20.0.1",
+    "rxjs": "^5.0.0",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "peerDependencies": {
+    "rxjs": "^5.0.0"
+  }
+}
