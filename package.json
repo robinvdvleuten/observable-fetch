@@ -5,8 +5,9 @@
   "license": "MIT",
   "author": "Robin van der Vleuten <robin@webstronauts.co>",
   "main": "dist/observable-fetch.js",
+  "module": "dist/observable-fetch.esm.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "node ./build",
     "test": "jest --env=jsdom"
   },
   "devDependencies": {
@@ -14,9 +15,11 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.4.0",
     "jest": "^20.0.1",
+    "p-map": "^1.1.1",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "rxjs": "^5.0.0",
+    "uglify-js": "^3.0.3",
     "whatwg-fetch": "^2.0.3"
   },
   "peerDependencies": {
