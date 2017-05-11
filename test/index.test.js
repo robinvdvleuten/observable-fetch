@@ -1,6 +1,5 @@
 import 'whatwg-fetch';
 import fetch from '../src';
-
 import 'rxjs/add/operator/toPromise';
 
 const createResponse = (status, statusText, response) =>
@@ -29,7 +28,10 @@ describe('request', () => {
     return fetch('http://example.com/foo').toPromise().then(result => {
       expect(result).toEqual({ foo: 'bar' });
       expect(window.fetch.mock.calls).toEqual([
-        ['http://example.com/foo', { headers: { accept: 'application/json' } }],
+        [
+          'http://example.com/foo',
+          { headers: new Headers({ accept: 'application/json' }) },
+        ],
       ]);
     });
   });
@@ -49,10 +51,10 @@ describe('request', () => {
             'http://example.com/foo',
             {
               body: '{"foo":"bar"}',
-              headers: {
+              headers: new Headers({
                 accept: 'application/json',
                 'content-type': 'application/json',
-              },
+              }),
             },
           ],
         ]);
@@ -73,7 +75,10 @@ describe('request', () => {
       expect(error.message).toEqual('Unauthorized');
       expect(error.response).toEqual(response);
       expect(window.fetch.mock.calls).toEqual([
-        ['http://example.com/foo', { headers: { accept: 'application/json' } }],
+        [
+          'http://example.com/foo',
+          { headers: new Headers({ accept: 'application/json' }) },
+        ],
       ]);
     });
   });
