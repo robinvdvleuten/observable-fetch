@@ -28,9 +28,7 @@ export default (url, options = {}) => {
     };
   }
 
-  const response = fetch(url, options)
-    .then(checkStatus)
-    .then(parseJson);
+  const response = fetch(url, options).then(checkStatus).then(parseJson);
 
   return Observable.fromPromise(response);
 };

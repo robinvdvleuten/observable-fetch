@@ -6,6 +6,7 @@ const pMap = require('p-map');
 const rollup = require('rollup');
 const uglify = require('uglify-js');
 
+// prettier-ignore
 const banner =
   '/*!\n' +
   ' * observable-fetch.js v' + pkg.version + '\n' +
@@ -14,11 +15,11 @@ const banner =
   ' */'
 
 const buildEntry = config => {
-  const isMinified = /min\.js$/.test(config.dest)
+  const isMinified = /min\.js$/.test(config.dest);
 
   return rollup.rollup(config).then(bundle => {
     let code = bundle.generate(config).code;
-    
+
     if (isMinified) {
       code = uglify.minify(code).code;
     }
@@ -27,15 +28,16 @@ const buildEntry = config => {
   });
 };
 
-const writeEntry = (dest, code) => new Promise((resolve, reject) => {
-  fs.writeFile(dest, code, err => {
-    if (err) {
-      return reject(err);
-    }
+const writeEntry = (dest, code) =>
+  new Promise((resolve, reject) => {
+    fs.writeFile(dest, code, err => {
+      if (err) {
+        return reject(err);
+      }
 
-    resolve();
+      resolve();
+    });
   });
-});
 
 const plugins = [
   babel({
@@ -46,10 +48,7 @@ const plugins = [
   }),
 ];
 
-const external = [
-  'rxjs/Observable',
-  'rxjs/add/observable/fromPromise',
-]
+const external = ['rxjs/Observable', 'rxjs/add/observable/fromPromise'];
 
 const builds = [
   {
@@ -69,8 +68,12 @@ const builds = [
   },
 ];
 
-pMap(builds, config => buildEntry(Object.assign({}, config, {
-  banner,
-  plugins,
-  external,
-})));
+pMap(builds, config =>
+  buildEntry(
+    Object.assign({}, config, {
+      banner,
+      plugins,
+      external,
+    })
+  )
+);
