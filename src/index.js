@@ -11,7 +11,7 @@ export class FetchError extends Error {
   }
 }
 
-const checkStatus = response => {
+const checkStatus = (response: Response): Response => {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
@@ -19,14 +19,19 @@ const checkStatus = response => {
   throw new FetchError(response);
 };
 
-const parseJson = response => {
+const parseJson = (response: Response): Promise<*> => {
   return response.json();
 };
 
 export default (input: RequestInfo, init: RequestOptions = {}): Observable => {
-  const headers = init.headers || new Headers();
+  let headers = init.headers || new Headers();
+
+  if (!(headers instanceof Headers)) {
+    headers = new Headers(headers);
+  }
+
   // Set correct accept header as default.
-  headers.append('accept', 'application/json');
+  headers.set('accept', 'application/json');
 
   if (typeof init.body === 'object' && init.body !== null) {
     headers.set('content-type', 'application/json');
