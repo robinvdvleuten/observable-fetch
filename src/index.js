@@ -19,6 +19,16 @@ const parseJson = (response: Response): Promise<*> => {
   return response.json();
 };
 
+const setHeaderDefault = (
+  headers: Headers,
+  name: string,
+  defaultValue: string
+) => {
+  if (!headers.has(name)) {
+    headers.set(name, defaultValue);
+  }
+};
+
 export default (input: RequestInfo, init: RequestOptions = {}): Observable => {
   let headers = init.headers || new Headers();
 
@@ -26,11 +36,10 @@ export default (input: RequestInfo, init: RequestOptions = {}): Observable => {
     headers = new Headers(headers);
   }
 
-  // Set correct accept header as default.
-  headers.set('accept', 'application/json');
+  setHeaderDefault(headers, 'Accept', 'application/json');
 
   if (typeof init.body === 'object' && init.body !== null) {
-    headers.set('content-type', 'application/json');
+    setHeaderDefault(headers, 'Content-Type', 'application/json');
     init.body = JSON.stringify(init.body);
   }
 

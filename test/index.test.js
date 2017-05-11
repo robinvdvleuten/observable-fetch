@@ -77,7 +77,7 @@ describe('request', () => {
     });
   });
 
-  it('should overwrite given headers with required headers.', async () => {
+  it('should not overwrite given headers with default headers.', async () => {
     expect.assertions(2);
 
     window.fetch.mockReturnValue(
@@ -86,15 +86,40 @@ describe('request', () => {
 
     await fetch('http://example.com/foo', {
       body: { foo: 'bar' },
-      headers: new Headers({ 'content-type': 'text/plain' }),
+      headers: new Headers({
+        accept: 'text/html',
+        'content-type': 'text/plain',
+      }),
     }).toPromise();
 
     expect(window.fetch).toHaveBeenCalledTimes(1);
     expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
       body: '{"foo":"bar"}',
       headers: new Headers({
-        accept: 'application/json',
-        'content-type': 'application/json',
+        accept: 'text/html',
+        'content-type': 'text/plain',
+      }),
+    });
+  });
+
+  it('should accept headers as plain object.', async () => {
+    expect.assertions(2);
+
+    window.fetch.mockReturnValue(
+      Promise.resolve(createResponse(200, 'OK', '{}'))
+    );
+
+    await fetch('http://example.com/foo', {
+      body: { foo: 'bar' },
+      headers: { accept: 'text/html', 'content-type': 'text/plain' },
+    }).toPromise();
+
+    expect(window.fetch).toHaveBeenCalledTimes(1);
+    expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+      body: '{"foo":"bar"}',
+      headers: new Headers({
+        accept: 'text/html',
+        'content-type': 'text/plain',
       }),
     });
   });
