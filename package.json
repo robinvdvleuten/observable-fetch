@@ -6,10 +6,22 @@
   "author": "Robin van der Vleuten <robin@webstronauts.co>",
   "main": "dist/observable-fetch.js",
   "module": "dist/observable-fetch.esm.js",
+  "files": [
+    "src",
+    "dist/*.js"
+  ],
   "scripts": {
     "build": "node ./build",
     "test": "jest --env=jsdom"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robinvdvleuten/observable-fetch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/robinvdvleuten/observable-fetch/issues"
+  },
+  "homepage": "https://github.com/robinvdvleuten/observable-fetch#readme",
   "devDependencies": {
     "babel-jest": "^20.0.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
