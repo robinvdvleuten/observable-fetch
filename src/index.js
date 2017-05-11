@@ -24,12 +24,12 @@ const parseJson = response => {
 };
 
 export default (input: RequestInfo, init: RequestOptions = {}): Observable => {
-  const headers = new Headers();
+  const headers = init.headers || new Headers();
   // Set correct accept header as default.
-  headers.append('Accept', 'application/json');
+  headers.append('accept', 'application/json');
 
   if (typeof init.body === 'object' && init.body !== null) {
-    headers.append('Content-Type', 'application/json');
+    headers.set('content-type', 'application/json');
     init.body = JSON.stringify(init.body);
   }
 

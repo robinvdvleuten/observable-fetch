@@ -18,68 +18,108 @@ describe('request', () => {
     window.fetch = jest.fn();
   });
 
-  it('should return a parsed JSON response', () => {
-    expect.assertions(2);
+  it('should return a parsed JSON response', async () => {
+    expect.assertions(3);
 
     window.fetch.mockReturnValue(
       Promise.resolve(createResponse(200, 'OK', '{"foo": "bar"}'))
     );
 
-    return fetch('http://example.com/foo').toPromise().then(result => {
-      expect(result).toEqual({ foo: 'bar' });
-      expect(window.fetch.mock.calls).toEqual([
-        [
-          'http://example.com/foo',
-          { headers: new Headers({ accept: 'application/json' }) },
-        ],
-      ]);
+    const result = await fetch('http://example.com/foo').toPromise();
+
+    expect(result).toEqual({ foo: 'bar' });
+
+    expect(window.fetch).toHaveBeenCalledTimes(1);
+    expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+      headers: new Headers({ accept: 'application/json' }),
     });
   });
 
-  it('should send a JSON encoded body with correct headers.', () => {
-    expect.assertions(1);
+  it('should send a JSON encoded body with correct headers.', async () => {
+    expect.assertions(2);
 
     window.fetch.mockReturnValue(
       Promise.resolve(createResponse(200, 'OK', '{}'))
     );
 
-    return fetch('http://example.com/foo', { body: { foo: 'bar' } })
-      .toPromise()
-      .then(result => {
-        expect(window.fetch.mock.calls).toEqual([
-          [
-            'http://example.com/foo',
-            {
-              body: '{"foo":"bar"}',
-              headers: new Headers({
-                accept: 'application/json',
-                'content-type': 'application/json',
-              }),
-            },
-          ],
-        ]);
-      });
+    await fetch('http://example.com/foo', { body: { foo: 'bar' } });
+
+    expect(window.fetch).toHaveBeenCalledTimes(1);
+    expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+      body: '{"foo":"bar"}',
+      headers: new Headers({
+        accept: 'application/json',
+        'content-type': 'application/json',
+      }),
+    });
   });
 
-  it('should thrown an error on non successful responses', () => {
-    expect.assertions(3);
+  it('should append required headers to given headers.', async () => {
+    expect.assertions(2);
+
+    window.fetch.mockReturnValue(
+      Promise.resolve(createResponse(200, 'OK', '{}'))
+    );
+
+    await fetch('http://example.com/foo', {
+      body: { foo: 'bar' },
+      headers: new Headers({ foo: 'bar' }),
+    }).toPromise();
+
+    expect(window.fetch).toHaveBeenCalledTimes(1);
+    expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+      body: '{"foo":"bar"}',
+      headers: new Headers({
+        accept: 'application/json',
+        'content-type': 'application/json',
+        foo: 'bar',
+      }),
+    });
+  });
+
+  it('should overwrite given headers with required headers.', async () => {
+    expect.assertions(2);
+
+    window.fetch.mockReturnValue(
+      Promise.resolve(createResponse(200, 'OK', '{}'))
+    );
+
+    await fetch('http://example.com/foo', {
+      body: { foo: 'bar' },
+      headers: new Headers({ 'content-type': 'text/plain' }),
+    }).toPromise();
+
+    expect(window.fetch).toHaveBeenCalledTimes(1);
+    expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+      body: '{"foo":"bar"}',
+      headers: new Headers({
+        accept: 'application/json',
+        'content-type': 'application/json',
+      }),
+    });
+  });
+
+  it('should thrown an error on non successful responses', async () => {
+    expect.assertions(4);
 
     const response = createResponse(
       401,
       'Unauthorized',
       '{ "error": "Unauthorized" }'
     );
+
     window.fetch.mockReturnValue(Promise.resolve(response));
 
-    return fetch('http://example.com/foo').toPromise().catch(error => {
-      expect(error.message).toEqual('Unauthorized');
-      expect(error.response).toEqual(response);
-      expect(window.fetch.mock.calls).toEqual([
-        [
-          'http://example.com/foo',
-          { headers: new Headers({ accept: 'application/json' }) },
-        ],
-      ]);
-    });
+    try {
+      await fetch('http://example.com/foo').toPromise();
+    } catch (error) {
+      expect(error.message).toBe('Unauthorized');
+      expect(error.response).toBe(response);
+
+      expect(window.fetch).toHaveBeenCalledTimes(1);
+      expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+        headers: new Headers({ accept: 'application/json' }),
+      });
+    }
   });
 });
