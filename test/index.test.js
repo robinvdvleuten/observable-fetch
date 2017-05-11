@@ -35,6 +35,21 @@ describe('request', () => {
     });
   });
 
+  it('should return nothing when response contains no content', async () => {
+    expect.assertions(3);
+
+    window.fetch.mockReturnValue(Promise.resolve(createResponse(204, 'OK')));
+
+    const result = await fetch('http://example.com/foo').toPromise();
+
+    expect(result).toEqual(null);
+
+    expect(window.fetch).toHaveBeenCalledTimes(1);
+    expect(window.fetch).toHaveBeenCalledWith('http://example.com/foo', {
+      headers: new Headers({ accept: 'application/json' }),
+    });
+  });
+
   it('should send a JSON encoded body with correct headers.', async () => {
     expect.assertions(2);
 

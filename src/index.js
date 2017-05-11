@@ -15,7 +15,11 @@ const checkStatus = (response: Response): Response => {
   throw error;
 };
 
-const parseJson = (response: Response): Promise<*> => {
+const parseJson = (response: Response): ?Promise<*> => {
+  if (response.status === 204) {
+    return null;
+  }
+
   return response.json();
 };
 
