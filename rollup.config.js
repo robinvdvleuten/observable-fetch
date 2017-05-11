@@ -7,7 +7,8 @@ export default {
   format: 'cjs',
   plugins: [
     babel({
-      presets: [['env', { modules: false }], 'stage-2'],
+      presets: [['env', { modules: false }]],
+      plugins: ['transform-object-rest-spread'],
       exclude: 'node_modules/**',
       babelrc: false,
     }),
