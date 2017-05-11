@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 
 const checkStatus = (response: Response): Response => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.ok) {
     return response;
   }
 
