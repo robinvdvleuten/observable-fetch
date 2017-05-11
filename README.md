@@ -2,6 +2,7 @@
 
 [RxJS](http://github.com/ReactiveX/RxJS) Observable wrapped around the WHATWG [Fetch](https://fetch.spec.whatwg.org/) API.
 
+[![NPM version](https://img.shields.io/npm/v/observable-fetch.svg)](https://www.npmjs.com/package/observable-fetch)
 [![Build Status](https://travis-ci.org/robinvdvleuten/observable-fetch.svg?branch=master)](https://travis-ci.org/robinvdvleuten/observable-fetch)
 
 ## Installation
