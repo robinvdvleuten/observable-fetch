@@ -1,34 +1,40 @@
+// @flow
 import { Observable } from 'rxjs/Observable';
-
 import 'rxjs/add/observable/fromPromise';
 
-const checkStatus = response => {
-  if (response.status >= 200 && response.status < 300) {
+const checkStatus = (response: Response): Response => {
+  if (response.ok) {
     return response;
   }
 
-  const error = new Error(response.statusText);
+  // Explicity typecast error instance to "any".
+  // This way flow will not throw an error about the undefined property.
+  const error: any = new Error(response.statusText);
   error.response = response;
+
   throw error;
 };
 
-const parseJson = response => {
+const parseJson = (response: Response): Promise<*> => {
   return response.json();
 };
 
-export default (url, options = {}) => {
-  // Set correct accept header as default.
-  options.headers = { ...options.headers, accept: 'application/json' };
+export default (input: RequestInfo, init: RequestOptions = {}): Observable => {
+  let headers = init.headers || new Headers();
 
-  if (typeof options.body === 'object' && options.body !== null) {
-    options.body = JSON.stringify(options.body);
-    options.headers = {
-      ...options.headers,
-      'content-type': 'application/json',
-    };
+  if (!(headers instanceof Headers)) {
+    headers = new Headers(headers);
   }
 
-  const response = fetch(url, options).then(checkStatus).then(parseJson);
+  // Set correct accept header as default.
+  headers.set('accept', 'application/json');
 
-  return Observable.fromPromise(response);
+  if (typeof init.body === 'object' && init.body !== null) {
+    headers.set('content-type', 'application/json');
+    init.body = JSON.stringify(init.body);
+  }
+
+  return Observable.fromPromise(
+    fetch(input, { ...init, headers }).then(checkStatus).then(parseJson)
+  );
 };

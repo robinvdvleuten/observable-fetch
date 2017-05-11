@@ -41,7 +41,7 @@ const writeEntry = (dest, code) =>
 
 const plugins = [
   babel({
-    presets: [['env', { modules: false }]],
+    presets: [['env', { modules: false }], 'flow'],
     plugins: ['transform-object-rest-spread'],
     exclude: 'node_modules/**',
     babelrc: false,
