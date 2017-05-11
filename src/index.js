@@ -2,21 +2,17 @@
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 
-export class FetchError extends Error {
-  response: Response;
-
-  constructor(response: Response) {
-    super(response.statusText);
-    this.response = response;
-  }
-}
-
 const checkStatus = (response: Response): Response => {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
 
-  throw new FetchError(response);
+  // Explicity typecast error instance to "any".
+  // This way flow will not throw an error about the undefined property.
+  const error: any = new Error(response.statusText);
+  error.response = response;
+
+  throw error;
 };
 
 const parseJson = (response: Response): Promise<*> => {
