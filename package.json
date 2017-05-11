@@ -6,6 +6,12 @@
   "author": "Robin van der Vleuten <robin@webstronauts.co>",
   "main": "dist/observable-fetch.js",
   "module": "dist/observable-fetch.esm.js",
+  "keywords": [
+    "Rx",
+    "observable",
+    "fetch",
+    "ajax"
+  ],
   "files": [
     "src",
     "dist/*.js"
