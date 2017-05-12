@@ -21,7 +21,8 @@
     "flow": "flow",
     "test": "jest --env=jsdom",
     "format": "prettier --single-quote --trailing-comma es5 --write '{src,test,build}/**/*.js'",
-    "precommit": "lint-staged --verbose"
+    "precommit": "lint-staged --verbose",
+    "prepublish": "yarn build"
   },
   "lint-staged": {
     "*.js": [
