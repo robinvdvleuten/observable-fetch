@@ -11,7 +11,7 @@ const createResponse = (status, statusText, response) =>
     },
   });
 
-describe('request', () => {
+describe('observable-fetch', () => {
   let request;
 
   beforeEach(() => {
